@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mini Chat App</title>
+
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background: #f2f6ff;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .chat-box {
+        background: #ffffff;
+        padding: 16px;
+        border-radius: 18px;
+        margin: 15px 0;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
+        border-left: 6px solid #6c63ff;
+        transition: 0.2s;
+        position: relative;
+      }
+
+      .chat-box:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.12);
+      }
+
+      .chat-box p {
+        margin: 6px 0;
+        font-size: 15px;
+        color: #333;
+      }
+
+      strong {
+        color: #6c63ff;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        background: #6c63ff;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+        transition: 0.2s;
+        margin-top: 10px;
+      }
+
+      .btn:hover {
+        background: #574bdb;
+        transform: scale(1.03);
+      }
+.delete-btn {
+  background: #ff4d4d;
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.edit-btn {
+  background: #4d79ff;
+  position: absolute;
+  right: 18px;
+  top: 60px;   /* move it below delete button */
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+
+      .delete-btn:hover {
+        background: #cc0000;
+      }
+
+      form {
+        display: inline;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div>
+
+      <% for (let data of datas) { %>
+      <div class="chat-box">
+        <form action="/chat/<%= data._id %>?_method=DELETE" method="POST">
+          <button class="btn delete-btn">Delete</button>
+        </form>
+        <form action="/chat/<%=data._id%>/edit" method="GET">
+          <button class="btn edit-btn">Edit</button>
+        </form>
+
+        <p><strong>From:</strong> <%= data.from %></p>
+        <p><strong>Message:</strong> <%= data.msg %></p>
+        <p><strong>To:</strong> <%= data.to %></p>
+      </div>
+      <% } %>
+      
+
+      <form action="/chat/new" method="GET">
+        <button class="btn">Add New</button>
+      </form>
+
+    </div>
+  </body>
+</html>
