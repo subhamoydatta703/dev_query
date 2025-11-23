@@ -32,4 +32,4 @@ npm run dev
 ## Author
 **Subhamoy Datta**
 
-**GitHub: @subhamoydatta703**
+[**GitHub: @subhamoydatta703**](https://github.com/subhamoydatta703)
