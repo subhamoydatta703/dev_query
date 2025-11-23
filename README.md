@@ -29,3 +29,6 @@ cd client
 npm install
 npm run dev
 ```
+## Author
+**Subhamoy Datta**
+**GitHub: @subhamoydatta703**
