@@ -4,9 +4,7 @@ import "./Auth.css";
 const Login = () => {
     return (
         <div className="auth-container">
-            <div className="auth-box">
-                <SignIn path="/login" routing="path" signUpUrl="/signup" />
-            </div>
+            <SignIn path="/login" routing="path" signUpUrl="/signup" />
         </div>
     );
 };
