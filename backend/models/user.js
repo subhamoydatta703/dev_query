@@ -6,6 +6,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    userId: {
+        type: String,
+        unique: true,
+        sparse: true, // Allows existing users without userId initially
+    },
     username: {
         type: String,
         required: true,

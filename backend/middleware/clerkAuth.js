@@ -1,6 +1,16 @@
 const { ClerkExpressRequireAuth } = require('@clerk/clerk-sdk-node');
 const User = require('../models/user');
 
+// Helper function to generate random 4-character alphanumeric userId
+function generateUserId() {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let id = 'user_';
+    for (let i = 0; i < 4; i++) {
+        id += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return id;
+}
+
 // 1. Clerk Authentication Middleware
 const requireAuth = ClerkExpressRequireAuth({
     // options if needed
@@ -43,19 +53,70 @@ const syncUser = async (req, res, next) => {
                 console.log("Found existing user by email, linking Clerk ID");
                 // Link Clerk ID to existing user
                 existingUser.clerkId = userId;
+
+                // Generate userId if not already set
+                if (!existingUser.userId) {
+                    let newUserId;
+                    let attempts = 0;
+                    const maxAttempts = 10;
+
+                    // Retry logic in case of collision
+                    while (attempts < maxAttempts) {
+                        newUserId = generateUserId();
+                        const collision = await User.findOne({ userId: newUserId });
+                        if (!collision) break;
+                        attempts++;
+                    }
+
+                    existingUser.userId = newUserId;
+                    console.log("Generated userId:", newUserId);
+                }
+
                 await existingUser.save();
                 user = existingUser;
             } else {
                 console.log("Creating brand new user");
+
+                // Generate unique userId
+                let newUserId;
+                let attempts = 0;
+                const maxAttempts = 10;
+
+                while (attempts < maxAttempts) {
+                    newUserId = generateUserId();
+                    const collision = await User.findOne({ userId: newUserId });
+                    if (!collision) break;
+                    attempts++;
+                }
+
+                console.log("Generated userId:", newUserId);
+
                 // Create new user
                 user = new User({
                     clerkId: userId,
+                    userId: newUserId,
                     email: email,
                     username: username
                 });
                 await user.save();
                 console.log("New user created successfully");
             }
+        } else if (!user.userId) {
+            // Existing user doesn't have userId yet, generate one
+            let newUserId;
+            let attempts = 0;
+            const maxAttempts = 10;
+
+            while (attempts < maxAttempts) {
+                newUserId = generateUserId();
+                const collision = await User.findOne({ userId: newUserId });
+                if (!collision) break;
+                attempts++;
+            }
+
+            user.userId = newUserId;
+            await user.save();
+            console.log("Assigned userId to existing user:", newUserId);
         }
 
         console.log("Final user object:", user);
