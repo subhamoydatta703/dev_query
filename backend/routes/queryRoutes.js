@@ -1,26 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Query = require("../models/query");
-const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-
-const JWT_SECRET = process.env.JWT_SECRET || "your_super_secret_key_123";
-
-// Middleware to check auth
-const requireAuth = async (req, res, next) => {
-    const token = req.cookies.token;
-    if (!token) {
-        return res.status(401).json({ message: "Authentication required" });
-    }
-    try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        req.user = await User.findById(decoded.userId).select("-password");
-        if (!req.user) throw new Error();
-        next();
-    } catch (error) {
-        res.status(401).json({ message: "Invalid token" });
-    }
-};
 
 // Get all queries
 router.get("/", async (req, res) => {
@@ -46,7 +27,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Create query
-router.post("/", requireAuth, async (req, res) => {
+router.post("/", async (req, res) => {
     try {
         const { title, description, tags } = req.body;
         const query = new Query({
@@ -63,7 +44,7 @@ router.post("/", requireAuth, async (req, res) => {
 });
 
 // Update query
-router.put("/:id", requireAuth, async (req, res) => {
+router.put("/:id", async (req, res) => {
     try {
         const query = await Query.findById(req.params.id);
         if (!query) {
@@ -86,7 +67,7 @@ router.put("/:id", requireAuth, async (req, res) => {
 });
 
 // Delete query
-router.delete("/:id", requireAuth, async (req, res) => {
+router.delete("/:id", async (req, res) => {
     try {
         const query = await Query.findById(req.params.id);
         if (!query) {
