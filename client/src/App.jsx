@@ -6,6 +6,7 @@ import About from "./pages/About";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import CreateQuery from "./pages/CreateQuery";
+import EditQuery from "./pages/EditQuery";
 import QueryDetails from "./pages/QueryDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
@@ -25,6 +26,7 @@ function App() {
 
             <Route element={<ProtectedRoute />}>
               <Route path="/ask" element={<CreateQuery />} />
+              <Route path="/edit-query/:id" element={<EditQuery />} />
             </Route>
           </Routes>
         </div>

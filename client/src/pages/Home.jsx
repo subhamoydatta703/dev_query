@@ -62,12 +62,20 @@ const Home = () => {
                             ))}
                         </div>
                         {user && user._id === query.author?._id && (
-                            <button
-                                onClick={(e) => handleDeleteQuery(query._id, e)}
-                                className="delete-button query-card-delete"
-                            >
-                                Delete
-                            </button>
+                            <div className="query-actions">
+                                <button
+                                    onClick={() => navigate(`/edit-query/${query._id}`)}
+                                    className="edit-button"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={(e) => handleDeleteQuery(query._id, e)}
+                                    className="delete-button query-card-delete"
+                                >
+                                    Delete
+                                </button>
+                            </div>
                         )}
                     </div>
                 ))}

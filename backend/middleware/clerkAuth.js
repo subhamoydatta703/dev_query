@@ -33,8 +33,11 @@ const syncUser = async (req, res, next) => {
 
             console.log("Creating new user with email:", email, "username:", username);
 
-            // Check if user exists with this email (legacy user)
-            const existingUser = await User.findOne({ email: email });
+            // ONLY check for existing user if email is present and not empty
+            let existingUser = null;
+            if (email && email.trim() !== "") {
+                existingUser = await User.findOne({ email: email });
+            }
 
             if (existingUser) {
                 console.log("Found existing user by email, linking Clerk ID");

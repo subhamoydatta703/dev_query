@@ -8,6 +8,7 @@ const { requireAuth, syncUser } = require("./middleware/clerkAuth");
 
 const queryRoutes = require("./routes/queryRoutes");
 const answerRoutes = require("./routes/answerRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 // Connect to Database
 connectionDB();
@@ -41,6 +42,7 @@ app.use(express.urlencoded({ extended: true }));
 // Protected Routes: Auth is handled inside individual route files
 app.use("/api/queries", queryRoutes);
 app.use("/api/queries", answerRoutes);
+app.use("/api", requireAuth, syncUser, userRoutes);
 
 // Basic route
 app.get("/", (req, res) => {
