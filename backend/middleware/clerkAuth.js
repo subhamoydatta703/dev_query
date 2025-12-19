@@ -20,21 +20,29 @@ const syncUser = async (req, res, next) => {
         let user = await User.findOne({ clerkId: userId });
 
         if (!user) {
-            // Create new user if first time
-            // fallback to email from session claims or empty if not present yet
-            // Note: Clerk session claims usually have email if configured.
             const email = sessionClaims?.email || "";
             const username = sessionClaims?.username || `user_${userId.substr(0, 8)}`;
 
-            user = new User({
-                clerkId: userId,
-                email: email, // Might need to be updated via webhook for accuracy
-                username: username
-            });
-            await user.save();
+            // Check if user exists with this email (legacy user)
+            const existingUser = await User.findOne({ email: email });
+
+            if (existingUser) {
+                // Link Clerk ID to existing user
+                existingUser.clerkId = userId;
+                await existingUser.save();
+                user = existingUser;
+            } else {
+                // Create new user
+                user = new User({
+                    clerkId: userId,
+                    email: email,
+                    username: username
+                });
+                await user.save();
+            }
         }
 
-        req.user = user; // Attach Mongo User to request
+        req.user = user;
         next();
     } catch (error) {
         console.error("User sync error:", error);

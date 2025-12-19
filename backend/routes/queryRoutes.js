@@ -29,6 +29,14 @@ router.get("/:id", async (req, res) => {
 // Create query
 router.post("/", async (req, res) => {
     try {
+        console.log("Create Query Request Received");
+        console.log("User in Request:", req.user);
+
+        if (!req.user) {
+            console.error("No user found in request!");
+            return res.status(401).json({ message: "User not authenticated or synced." });
+        }
+
         const { title, description, tags } = req.body;
         const query = new Query({
             title,
@@ -39,7 +47,8 @@ router.post("/", async (req, res) => {
         await query.save();
         res.status(201).json(query);
     } catch (error) {
-        res.status(500).json({ message: "Error creating query" });
+        console.error("Error creating query:", error);
+        res.status(500).json({ message: error.message || "Error creating query" });
     }
 });
 
