@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuthContext } from "../context/AuthContext";
 import "./Home.css";
 
 const Home = () => {
     const [queries, setQueries] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { user } = useAuth();
+    const { user } = useAuthContext();
     const navigate = useNavigate();
 
     useEffect(() => {

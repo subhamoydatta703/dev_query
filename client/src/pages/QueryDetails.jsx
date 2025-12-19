@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../context/AuthContext";
+import { useAuthContext } from "../context/AuthContext";
 import "./QueryDetails.css";
 
 const QueryDetails = () => {
@@ -11,7 +11,7 @@ const QueryDetails = () => {
     const [newAnswer, setNewAnswer] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    const { user } = useAuth();
+    const { user } = useAuthContext();
     const navigate = useNavigate();
 
     useEffect(() => {
