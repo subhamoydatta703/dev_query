@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Answer = require("../models/answer");
 const User = require("../models/user");
+const { requireAuth, syncUser } = require("../middleware/clerkAuth");
 
 // Get answers for a query
 router.get("/:queryId/answers", async (req, res) => {
@@ -14,7 +15,7 @@ router.get("/:queryId/answers", async (req, res) => {
 });
 
 // Create answer
-router.post("/:queryId/answers", async (req, res) => {
+router.post("/:queryId/answers", requireAuth, syncUser, async (req, res) => {
     try {
         const { content } = req.body;
         const answer = new Answer({
@@ -32,7 +33,7 @@ router.post("/:queryId/answers", async (req, res) => {
 });
 
 // Delete answer - route is now relative to /api/queries
-router.delete("/:queryId/answers/:id", async (req, res) => {
+router.delete("/:queryId/answers/:id", requireAuth, syncUser, async (req, res) => {
     try {
         const answer = await Answer.findById(req.params.id);
         if (!answer) {

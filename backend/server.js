@@ -37,9 +37,9 @@ app.use(express.urlencoded({ extended: true }));
 // app.use(cookieParser()); // No longer needed with Clerk
 
 // Routes
-// Protected Routes: Require Clerk Auth + User Sync
-app.use("/api/queries", requireAuth, syncUser, queryRoutes);
-app.use("/api/queries", requireAuth, syncUser, answerRoutes);
+// Protected Routes: Auth is handled inside individual route files
+app.use("/api/queries", queryRoutes);
+app.use("/api/queries", answerRoutes);
 
 // Basic route
 app.get("/", (req, res) => {

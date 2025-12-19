@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Query = require("../models/query");
 const User = require("../models/user");
+const { requireAuth, syncUser } = require("../middleware/clerkAuth");
 
 // Get all queries
 router.get("/", async (req, res) => {
@@ -27,7 +28,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Create query
-router.post("/", async (req, res) => {
+router.post("/", requireAuth, syncUser, async (req, res) => {
     try {
         console.log("Create Query Request Received");
         console.log("User in Request:", req.user);
@@ -53,7 +54,7 @@ router.post("/", async (req, res) => {
 });
 
 // Update query
-router.put("/:id", async (req, res) => {
+router.put("/:id", requireAuth, syncUser, async (req, res) => {
     try {
         const query = await Query.findById(req.params.id);
         if (!query) {
@@ -76,7 +77,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // Delete query
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", requireAuth, syncUser, async (req, res) => {
     try {
         const query = await Query.findById(req.params.id);
         if (!query) {

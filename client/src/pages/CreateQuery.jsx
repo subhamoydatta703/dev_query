@@ -17,7 +17,9 @@ const CreateQuery = () => {
             await axios.post("/queries", { title, description, tags: tagsArray });
             navigate("/");
         } catch (err) {
-            setError(err.response?.data?.message || "Failed to create query");
+            console.error("Create Query Error:", err);
+            console.log("Response:", err.response);
+            setError(err.response?.data?.message || "Failed to create query (Check Console)");
         }
     };
 
