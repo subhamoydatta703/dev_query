@@ -3,9 +3,8 @@ const app = express();
 const path = require("path");
 const connectionDB = require("./db/connection");
 const cors = require("cors");
-const cookieParser = require("cookie-parser");
+const { requireAuth, syncUser } = require("./middleware/clerkAuth");
 
-const authRoutes = require("./routes/authRoutes");
 const queryRoutes = require("./routes/queryRoutes");
 const answerRoutes = require("./routes/answerRoutes");
 
@@ -35,12 +34,12 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+// app.use(cookieParser()); // No longer needed with Clerk
 
 // Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/queries", queryRoutes);
-app.use("/api/queries", answerRoutes);
+// Protected Routes: Require Clerk Auth + User Sync
+app.use("/api/queries", requireAuth, syncUser, queryRoutes);
+app.use("/api/queries", requireAuth, syncUser, answerRoutes);
 
 // Basic route
 app.get("/", (req, res) => {

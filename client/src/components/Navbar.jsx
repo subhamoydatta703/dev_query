@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 import "./Navbar.css";
 
 const Navbar = () => {
-    const { user, logout } = useAuth();
-
     return (
         <nav className="navbar">
             <div className="navbar-container">
@@ -15,26 +13,24 @@ const Navbar = () => {
                     <Link to="/about" className="navbar-link">
                         About
                     </Link>
-                    {user ? (
-                        <>
-                            <span className="navbar-welcome">Welcome, {user.username}</span>
-                            <Link to="/ask" className="btn btn-primary">
-                                Ask Question
-                            </Link>
-                            <button onClick={logout} className="navbar-logout">
-                                Logout
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            <Link to="/login" className="navbar-link">
-                                Login
-                            </Link>
-                            <Link to="/signup" className="btn btn-primary">
-                                Signup
-                            </Link>
-                        </>
-                    )}
+
+                    <SignedIn>
+                        <Link to="/ask" className="btn btn-primary">
+                            Ask Question
+                        </Link>
+                        <div style={{ marginLeft: "1rem" }}>
+                            <UserButton afterSignOutUrl="/" />
+                        </div>
+                    </SignedIn>
+
+                    <SignedOut>
+                        <Link to="/login" className="navbar-link">
+                            Login
+                        </Link>
+                        <Link to="/signup" className="btn btn-primary">
+                            Signup
+                        </Link>
+                    </SignedOut>
                 </div>
             </div>
         </nav>
