@@ -13,8 +13,20 @@ const answerRoutes = require("./routes/answerRoutes");
 connectionDB();
 
 // Middleware
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://dev-query-ten.vercel.app"
+];
+
 app.use(cors({
-  origin: "http://localhost:5173", // Vite default port
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      // Optional: Allow all during development/testing or log
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
@@ -24,7 +36,7 @@ app.use(cookieParser());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/queries", queryRoutes);
-app.use("/api/queries", answerRoutes); // Changed from /api to /api/queries
+app.use("/api/queries", answerRoutes);
 
 // Basic route
 app.get("/", (req, res) => {
@@ -32,6 +44,10 @@ app.get("/", (req, res) => {
 });
 
 const PORT = 8080;
-app.listen(PORT, () => {
-  console.log(`Server listening at http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server listening at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
