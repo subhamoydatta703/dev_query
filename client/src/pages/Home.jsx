@@ -51,7 +51,7 @@ const Home = () => {
                         </Link>
                         <p className="query-description">{query.description}</p>
                         <div className="query-meta">
-                            <span>By {query.author?.username || "Unknown"}</span>
+                            <span>By {query.author?.userId || query.author?.username || "Unknown"}</span>
                             <span>{new Date(query.createdAt).toLocaleDateString()}</span>
                         </div>
                         <div className="query-tags">

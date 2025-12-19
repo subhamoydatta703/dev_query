@@ -6,6 +6,7 @@ function generateUserId() {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     let id = 'user_';
     for (let i = 0; i < 4; i++) {
+        // this loop is used to scaleup the userid numbers further if needed
         id += chars[Math.floor(Math.random() * chars.length)];
     }
     return id;
@@ -91,12 +92,19 @@ const syncUser = async (req, res, next) => {
 
                 console.log("Generated userId:", newUserId);
 
+                // Use the short userId as the username if no specific username provided or if it's auto-generated
+                let finalUsername = username;
+                // If username was auto-generated (starts with user_ and derives from Clerk ID), use the short ID instead
+                if (!sessionClaims?.username || finalUsername.startsWith('user_')) {
+                    finalUsername = newUserId;
+                }
+
                 // Create new user
                 user = new User({
                     clerkId: userId,
                     userId: newUserId,
                     email: email,
-                    username: username
+                    username: finalUsername
                 });
                 await user.save();
                 console.log("New user created successfully");

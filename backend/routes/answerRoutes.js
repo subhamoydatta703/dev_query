@@ -7,7 +7,7 @@ const { requireAuth, syncUser } = require("../middleware/clerkAuth");
 // Get answers for a query
 router.get("/:queryId/answers", async (req, res) => {
     try {
-        const answers = await Answer.find({ query: req.params.queryId }).populate("author", "username").sort({ createdAt: 1 });
+        const answers = await Answer.find({ query: req.params.queryId }).populate("author", "username userId").sort({ createdAt: 1 });
         res.json(answers);
     } catch (error) {
         res.status(500).json({ message: "Error fetching answers" });
@@ -25,7 +25,7 @@ router.post("/:queryId/answers", requireAuth, syncUser, async (req, res) => {
         });
         await answer.save();
         // Populate author before sending back
-        await answer.populate("author", "username");
+        await answer.populate("author", "username userId");
         res.status(201).json(answer);
     } catch (error) {
         res.status(500).json({ message: "Error creating answer" });

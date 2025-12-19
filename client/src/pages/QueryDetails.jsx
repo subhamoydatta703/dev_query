@@ -90,7 +90,7 @@ const QueryDetails = () => {
                     ))}
                 </div>
                 <div className="query-author-info">
-                    Asked by <span className="author-name">{query.author.username}</span> on {new Date(query.createdAt).toLocaleDateString()}
+                    Asked by <span className="author-name">{query.author.userId || query.author.username}</span> on {new Date(query.createdAt).toLocaleDateString()}
                 </div>
             </div>
 
@@ -101,7 +101,7 @@ const QueryDetails = () => {
                     <div key={answer._id} className="answer-card">
                         <p className="answer-content">{answer.content}</p>
                         <div className="answer-footer">
-                            <span>Answered by <span className="author-name">{answer.author.username}</span></span>
+                            <span>Answered by <span className="author-name">{answer.author.userId || answer.author.username}</span></span>
                             {user && user._id === answer.author._id && (
                                 <button onClick={() => handleDeleteAnswer(answer._id)} className="delete-button">
                                     Delete

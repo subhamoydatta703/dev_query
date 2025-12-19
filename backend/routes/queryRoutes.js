@@ -7,7 +7,7 @@ const { requireAuth, syncUser } = require("../middleware/clerkAuth");
 // Get all queries
 router.get("/", async (req, res) => {
     try {
-        const queries = await Query.find().populate("author", "username").sort({ createdAt: -1 });
+        const queries = await Query.find().populate("author", "username userId").sort({ createdAt: -1 });
         res.json(queries);
     } catch (error) {
         res.status(500).json({ message: "Error fetching queries" });
@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
 // Get single query
 router.get("/:id", async (req, res) => {
     try {
-        const query = await Query.findById(req.params.id).populate("author", "username");
+        const query = await Query.findById(req.params.id).populate("author", "username userId");
         if (!query) {
             return res.status(404).json({ message: "Query not found" });
         }
