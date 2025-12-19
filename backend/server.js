@@ -20,7 +20,11 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      origin.endsWith(".vercel.app") // Allow all Vercel deployments
+    ) {
       callback(null, true);
     } else {
       // Optional: Allow all during development/testing or log
